@@ -8,6 +8,7 @@ import SupportPage from './components/support/SupportPage';
 import NotFound from './components/notFound/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Login from './components/Login/Login';
 import {Routes,Route} from 'react-router-dom';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
      <Routes>
         <Route path='/' element={<HomePage/>}/>
         <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/login' element={<Login/>}/>
         <Route path='/about' element={<AboutPage/>}/>
         <Route path='/product' element={<ProductPage/>}/>
         <Route path='/pricing' element={<PricingPage/>}/>

@@ -5,22 +5,32 @@ import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 import ReactDOM from "react-dom";
 
-export default function BuyActionWindow ({ uid }) {
-
+export default function BuyActionWindow({ uid }) {
   const generalContext = useContext(GeneralContext);
 
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
 
   const handleBuyClick = () => {
-    axios.post("http://localhost:3002/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "BUY",
-    });
-
-    generalContext.closeBuyWindow();
+    const token = localStorage.getItem("token");
+    axios
+      .post(
+        "http://localhost:5000/newOrder",
+        {
+          name: uid,
+          qty: stockQuantity,
+          price: stockPrice,
+          mode: "BUY",
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+      .then(() => {
+        generalContext.closeBuyWindow();
+      })
+      .catch((err) => {
+        console.error("Order failed:", err);
+        generalContext.closeBuyWindow();
+      });
   };
 
   const handleCancelClick = () => {
@@ -29,10 +39,8 @@ export default function BuyActionWindow ({ uid }) {
 
   return ReactDOM.createPortal(
     <div className="container" id="buy-window" draggable="true">
-
       <div className="regular-order">
         <div className="inputs">
-
           <fieldset>
             <legend>Qty.</legend>
             <input
@@ -51,7 +59,6 @@ export default function BuyActionWindow ({ uid }) {
               value={stockPrice}
             />
           </fieldset>
-
         </div>
       </div>
 
@@ -76,10 +83,8 @@ export default function BuyActionWindow ({ uid }) {
           </Link>
         </div>
       </div>
-
     </div>,
-    
-    document.getElementById("portal")
-  );
-};
 
+    document.getElementById("portal"),
+  );
+}
